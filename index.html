@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नशा मुक्त अभियान - जिला प्रशासन</title>
+    <title>नशा मुक्त मंदसौर - जिला प्रशासन</title>
     <style>
         :root {
             --primary: #1d3557;
@@ -42,8 +42,8 @@
 
 <div class="container">
     <div class="header">
-        <h1>नशा मुक्त अभियान</h1>
-        <p>स्व-मूल्यांकन एवं जागरूकता प्रश्नावली</p>
+        <h1>नशा मुक्त मंदसौर</h1>
+        <p>जिला प्रशासन की एक पहल</p>
     </div>
 
     <form id="surveyForm">
@@ -82,9 +82,9 @@
             </select>
         </div>
 
-        <div class="section-title">भाग 2: सामान्य जानकारी (Common Section)</div>
+        <div class="section-title">भाग 2: प्रश्नावली (Common Section)</div>
 
-        <!-- Common Q1 -->
+        <!-- Q1 -->
         <div class="question-group">
             <label class="q-label">1. क्या आप किसी भी प्रकार का व्यसन/नशा करते हैं? *</label>
             <label class="option"><input type="radio" name="addiction" value="10" data-text="Yes" onclick="toggleAddictionQuestions(true)" required> हाँ (Yes)</label>
@@ -93,27 +93,42 @@
 
         <!-- Follow-up questions if Yes -->
         <div id="addictionFollowUp" class="hidden">
-            <!-- Common Q2 -->
+            <!-- Q2 -->
             <div class="question-group">
                 <label class="q-label">2. क्या आपको नशा करने के लिए किसी ने दबाव बनाया? *</label>
-                <label class="option"><input type="radio" name="pressure" value="5" data-text="Yes"> हाँ (Yes)</label>
+                <label class="option"><input type="radio" name="pressure" value="5" data-text="Yes" required> हाँ (Yes)</label>
                 <label class="option"><input type="radio" name="pressure" value="5" data-text="No"> नहीं (No)</label>
             </div>
 
-            <!-- Common Q3 -->
+            <!-- Q3 -->
             <div class="question-group">
-                <label class="q-label">3. आप कितने समय से यह नशा कर रहे हैं? *</label>
-                <label class="option"><input type="radio" name="duration" value="5" data-text="< 6 Months"> 6 महीने से कम</label>
+                <label class="q-label">3. क्या आपने अपने साथीगण के संपर्क में आने पर नशे की शुरुआत की? *</label>
+                <label class="option"><input type="radio" name="peer_pressure" value="10" data-text="Yes" required> हाँ (Yes)</label>
+                <label class="option"><input type="radio" name="peer_pressure" value="0" data-text="No"> ना (No)</label>
+            </div>
+
+            <!-- Q4 -->
+            <div class="question-group">
+                <label class="q-label">4. आप कितने समय से यह नशा कर रहे हैं? *</label>
+                <label class="option"><input type="radio" name="duration" value="5" data-text="< 6 Months" required> 6 महीने से कम</label>
                 <label class="option"><input type="radio" name="duration" value="10" data-text="6 Months - 1 Year"> 6 महीने से 1 साल</label>
                 <label class="option"><input type="radio" name="duration" value="15" data-text="> 1 Year"> 1 साल से अधिक</label>
             </div>
 
-            <!-- Common Q4 -->
+            <!-- Q5 -->
             <div class="question-group">
-                <label class="q-label">4. सप्ताह में कितनी बार आप नशीले पदार्थ का सेवन करते हैं? *</label>
-                <label class="option"><input type="radio" name="frequency" value="10" data-text="Daily"> प्रतिदिन</label>
+                <label class="q-label">5. सप्ताह में कितनी बार आप नशीले पदार्थ का सेवन करते हैं? *</label>
+                <label class="option"><input type="radio" name="frequency" value="15" data-text="Daily" required> प्रतिदिन</label>
                 <label class="option"><input type="radio" name="frequency" value="8" data-text="> 3 days/week"> सप्ताह में 3 दिन से अधिक</label>
                 <label class="option"><input type="radio" name="frequency" value="5" data-text="< 3 days/week"> सप्ताह में 3 दिन से कम</label>
+            </div>
+
+            <!-- Q6 -->
+            <div class="question-group">
+                <label class="q-label">6. क्या आपने नशा छोड़ने के लिए पूर्व में प्रयास किया? *</label>
+                <label class="option"><input type="radio" name="attempt" value="10" data-text="No attempt" required> प्रयास ही नहीं किया</label>
+                <label class="option"><input type="radio" name="attempt" value="15" data-text="Tried but failed"> प्रयास किया, पर नशा नहीं छोड़ पाया</label>
+                <label class="option"><input type="radio" name="attempt" value="0" data-text="Tried and helped"> प्रयास किया और कुछ हद तक नशा छोड़ने में मदद भी हुई</label>
             </div>
         </div>
 
@@ -121,7 +136,7 @@
         <div id="mainLoader" class="loader hidden">कृपया प्रतीक्षा करें...</div>
     </form>
 
-    <!-- VULNERABLE SECTION (Score > 25) -->
+    <!-- VULNERABLE SECTION (Score > 35) -->
     <div id="vulnerableSection" class="hidden">
         <div class="alert-danger">
             <h3 style="margin-top:0; color:#e63946;">⚠️ आप नशे से खतरे में हैं</h3>
@@ -161,7 +176,6 @@
 </div>
 
 <script>
-    // आपका Google Apps Script URL (Responses सेव करने के लिए)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZEYyaWRfR-ibKp84atgBqmScbRAzLSaYgf5NeSEflqnwnZb1JdCt5Do42TV3vY2oy_A/exec";
     const ADMIN_HELPLINE = "14446 (राष्ट्रीय हेल्पलाइन)";
     document.getElementById("helplineDisplay").innerText = ADMIN_HELPLINE;
@@ -169,7 +183,6 @@
     let masterSchoolData = {};
     let formDataCache = {};
 
-    // Page load होते ही local 'schools.json' से डेटा उठाएगा (Super Fast)
     window.onload = function() {
         fetch('schools.json')
             .then(response => response.json())
@@ -261,8 +274,10 @@
         if (doesConsume) {
             followUp.classList.remove("hidden");
             document.querySelector('input[name="pressure"]').required = true;
+            document.querySelector('input[name="peer_pressure"]').required = true;
             document.querySelector('input[name="duration"]').required = true;
             document.querySelector('input[name="frequency"]').required = true;
+            document.querySelector('input[name="attempt"]').required = true;
         } else {
             followUp.classList.add("hidden");
             radioInputs.forEach(input => {
@@ -294,8 +309,10 @@
                 schoolName: schoolName,
                 addiction: "No",
                 pressure: "N/A",
+                peerPressure: "N/A",
                 duration: "N/A",
                 frequency: "N/A",
+                attempt: "N/A",
                 score: 0,
                 name: "Not Applicable",
                 mobile: "Not Applicable"
@@ -312,13 +329,17 @@
         }
 
         const pressureEl = document.querySelector('input[name="pressure"]:checked');
+        const peerEl = document.querySelector('input[name="peer_pressure"]:checked');
         const durationEl = document.querySelector('input[name="duration"]:checked');
         const frequencyEl = document.querySelector('input[name="frequency"]:checked');
+        const attemptEl = document.querySelector('input[name="attempt"]:checked');
 
         const totalScore = addictionScore + 
                            parseInt(pressureEl.value) + 
+                           parseInt(peerEl.value) + 
                            parseInt(durationEl.value) + 
-                           parseInt(frequencyEl.value);
+                           parseInt(frequencyEl.value) + 
+                           parseInt(attemptEl.value);
 
         formDataCache = {
             gender: gender,
@@ -328,14 +349,17 @@
             schoolName: schoolName,
             addiction: "Yes",
             pressure: pressureEl.getAttribute("data-text"),
+            peerPressure: peerEl.getAttribute("data-text"),
             duration: durationEl.getAttribute("data-text"),
             frequency: frequencyEl.getAttribute("data-text"),
+            attempt: attemptEl.getAttribute("data-text"),
             score: totalScore
         };
 
         document.getElementById("surveyForm").classList.add("hidden");
 
-        if (totalScore > 25) {
+        // नया कटऑफ़: 35 मार्क्स
+        if (totalScore > 35) {
             document.getElementById("vulnerableSection").classList.remove("hidden");
         } else {
             sendToGoogleSheets(formDataCache);
@@ -379,10 +403,10 @@
 
         if (includeThankYou) {
             heading.innerText = "🙏 धन्यवाद!";
-            text.innerText = "धन्यवाद, नशा मुक्ति हेतु आप जिला प्रशासन के हेल्पलाइन नंबर पर संपर्क कर सकते हैं।";
+            text.innerText = "नशा मुक्ति मंदसौर हेतु आपकी जानकारी के लिए धन्यवाद | आप जिला प्रशासन के हेल्पलाइन नंबर (नम्बर)पर संपर्क कर सकते हैं।";
         } else {
             heading.innerText = "सहायता एवं संपर्क";
-            text.innerText = "आप जिला प्रशासन के हेल्पलाइन नंबर पर संपर्क कर सकते हैं।";
+            text.innerText = "आप जिला प्रशासन के nasha mukti kendra (Address ) , हेल्पलाइन नंबर (Some Contact number ) पर भी संपर्क कर सकते हैं।";
         }
 
         finalSection.classList.remove("hidden");
