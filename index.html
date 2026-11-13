@@ -60,26 +60,28 @@
         <!-- 2. Student or Citizen -->
         <div class="question-group">
             <label class="q-label">2. क्या आप विद्यार्थी (Student) हैं या अन्य नागरिक (Other Citizen)? *</label>
-            <label class="option"><input type="radio" name="category" value="Student" onclick="toggleStudentFields(true)" required> विद्यार्थी (Student)</label>
-            <label class="option"><input type="radio" name="category" value="Other Citizen" onclick="toggleStudentFields(false)"> अन्य नागरिक (Other Citizen)</label>
+            <label class="option"><input type="radio" name="category" value="Student" onclick="toggleFields(true)" required> विद्यार्थी (Student)</label>
+            <label class="option"><input type="radio" name="category" value="Other Citizen" onclick="toggleFields(false)"> अन्य नागरिक (Other Citizen)</label>
         </div>
 
-        <!-- Conditional Student Fields (Loaded instantly from schools.json) -->
-        <div id="studentDetails" class="hidden" style="background:#f8f9fa; padding:12px; border-radius:8px; border:1px dashed #bbb; margin-bottom:15px;">
+        <!-- Conditional Location & Student Fields (Loaded instantly from schools.json) -->
+        <div id="locationDetails" class="hidden" style="background:#f8f9fa; padding:12px; border-radius:8px; border:1px dashed #bbb; margin-bottom:15px;">
             <label class="q-label">विकास-खण्ड (Block) चुनें *</label>
             <select id="blockSelect" onchange="filterSchoolTypes()">
                 <option value="">-- विकास-खण्ड चुनें --</option>
             </select>
 
-            <label class="q-label">शाला का प्रकार (School Type) *</label>
-            <select id="schoolTypeSelect" onchange="filterSchools()">
-                <option value="">-- पहले विकास-खण्ड चुनें --</option>
-            </select>
+            <div id="schoolFieldsContainer">
+                <label class="q-label">शाला का प्रकार (School Type) *</label>
+                <select id="schoolTypeSelect" onchange="filterSchools()">
+                    <option value="">-- पहले विकास-खण्ड चुनें --</option>
+                </select>
 
-            <label class="q-label">विद्यालय का नाम (School Name) *</label>
-            <select id="schoolNameSelect">
-                <option value="">-- पहले शाला का प्रकार चुनें --</option>
-            </select>
+                <label class="q-label">विद्यालय का नाम (School Name) *</label>
+                <select id="schoolNameSelect">
+                    <option value="">-- पहले शाला का प्रकार चुनें --</option>
+                </select>
+            </div>
         </div>
 
         <div class="section-title">भाग 2: प्रश्नावली (Common Section)</div>
@@ -210,25 +212,26 @@
             .catch(err => console.error("Error loading local schools.json:", err));
     };
 
-    function toggleStudentFields(isStudent) {
-        const studentDiv = document.getElementById("studentDetails");
+    function toggleFields(isStudent) {
+        const locationDiv = document.getElementById("locationDetails");
+        const schoolFields = document.getElementById("schoolFieldsContainer");
         const block = document.getElementById("blockSelect");
         const type = document.getElementById("schoolTypeSelect");
         const name = document.getElementById("schoolNameSelect");
 
+        locationDiv.classList.remove("hidden");
+        block.required = true;
+
         if (isStudent) {
-            studentDiv.classList.remove("hidden");
-            block.required = true;
+            schoolFields.classList.remove("hidden");
             type.required = true;
             name.required = true;
         } else {
-            studentDiv.classList.add("hidden");
-            block.required = false;
+            schoolFields.classList.add("hidden");
             type.required = false;
             name.required = false;
-            block.value = "";
-            type.innerHTML = '<option value="">-- पहले विकास-खण्ड चुनें --</option>';
-            name.innerHTML = '<option value="">-- पहले शाला का प्रकार चुनें --</option>';
+            type.value = "";
+            name.value = "";
         }
     }
 
@@ -292,7 +295,7 @@
 
         const gender = document.querySelector('input[name="gender"]:checked').value;
         const category = document.querySelector('input[name="category"]:checked').value;
-        const block = category === "Student" ? document.getElementById("blockSelect").value : "N/A";
+        const block = document.getElementById("blockSelect").value;
         const schoolType = category === "Student" ? document.getElementById("schoolTypeSelect").value : "N/A";
         const schoolName = category === "Student" ? document.getElementById("schoolNameSelect").value : "N/A";
         
