@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नशा मुक्त मंदसौर -जिला प्रशासन</title>
+    <title>नशा मुक्त मंदसौर - जिला प्रशासन</title>
     <style>
         :root {
             --primary: #1d3557;
@@ -62,25 +62,27 @@
             <label class="q-label">2. आपकी श्रेणी चुनें (Select Category) *</label>
             <label class="option"><input type="radio" name="category" value="Student" onclick="handleCategoryChange('school')" required> विद्यार्थी - कक्षा 12वीं तक (School Student)</label>
             <label class="option"><input type="radio" name="category" value="Higher Education Student" onclick="handleCategoryChange('higher')"> विद्यार्थी - उच्च शिक्षा / महाविद्यालय (Higher Education Student)</label>
-            <label class="option"><input type="radio" name="category" value="Other Citizen" onclick="handleCategoryChange('none')"> अन्य नागरिक (Other Citizen)</label>
+            <label class="option"><input type="radio" name="category" value="Other Citizen" onclick="handleCategoryChange('citizen')"> अन्य नागरिक (Other Citizen)</label>
         </div>
 
-        <!-- Conditional Institution Fields (Loaded from schools.json or highereducation.json) -->
+        <!-- Conditional Institution/Block Fields -->
         <div id="studentDetails" class="hidden" style="background:#f8f9fa; padding:12px; border-radius:8px; border:1px dashed #bbb; margin-bottom:15px;">
             <label class="q-label">विकास-खण्ड (Block) चुनें *</label>
             <select id="blockSelect" onchange="filterInstitutionTypes()">
                 <option value="">-- विकास-खण्ड चुनें --</option>
             </select>
 
-            <label class="q-label" id="typeLabel">शाला का प्रकार (School Type) *</label>
-            <select id="schoolTypeSelect" onchange="filterInstitutions()">
-                <option value="">-- पहले विकास-खण्ड चुनें --</option>
-            </select>
+            <div id="institutionFieldsGroup">
+                <label class="q-label" id="typeLabel">शाला का प्रकार (School Type) *</label>
+                <select id="schoolTypeSelect" onchange="filterInstitutions()">
+                    <option value="">-- पहले विकास-खण्ड चुनें --</option>
+                </select>
 
-            <label class="q-label" id="nameLabel">विद्यालय का नाम (School Name) *</label>
-            <select id="schoolNameSelect">
-                <option value="">-- पहले प्रकार चुनें --</option>
-            </select>
+                <label class="q-label" id="nameLabel">विद्यालय का नाम (School Name) *</label>
+                <select id="schoolNameSelect">
+                    <option value="">-- पहले प्रकार चुनें --</option>
+                </select>
+            </div>
         </div>
 
         <div class="section-title">भाग 2: प्रश्नावली (Common Section)</div>
@@ -166,11 +168,11 @@
         <div class="alert-safe">
             <h3 style="margin-top:0; color:#2a9d8f;" id="finalHeading">🙏 धन्यवाद!</h3>
             <p style="font-size:16px; line-height:1.5; margin-bottom:0;" id="finalText">
-                नशा मुक्ति हेतु आप जिला प्रशासन के नशा मुक्ति केंद्र , गनेड़ीवाल धर्मशाला भवन जिला चिकित्सालय मंदसौर या जिला हेल्पलाइन नंबर 9617977184 पर संपर्क कर सकते हैं।
+                नशा मुक्ति हेतु आप जिला प्रशासन के हेल्पलाइन नंबर पर संपर्क कर सकते हैं।
             </p>
         </div>
         <div class="helpline-box">
-            राष्ट्रीय हेल्पलाइन नंबर  : <span id="helplineDisplay">14446</span>
+            जिला प्रशासन हेल्पलाइन नंबर: <span id="helplineDisplay">9617977184</span>
         </div>
     </div>
 
@@ -178,7 +180,7 @@
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZEYyaWRfR-ibKp84atgBqmScbRAzLSaYgf5NeSEflqnwnZb1JdCt5Do42TV3vY2oy_A/exec";
-    const ADMIN_HELPLINE = "14446 (राष्ट्रीय हेल्पलाइन)";
+    const ADMIN_HELPLINE = "9617977184 / 14416";
     document.getElementById("helplineDisplay").innerText = ADMIN_HELPLINE;
 
     let schoolDataMap = {};
@@ -202,7 +204,6 @@
     }
 
     window.onload = function() {
-        // Load schools.json (below 12th)
         fetch('schools.json')
             .then(response => response.json())
             .then(data => {
@@ -213,7 +214,6 @@
             })
             .catch(err => console.error("Error loading local schools.json:", err));
 
-        // Load highereducation.json (Higher Education)
         fetch('highereducation.json')
             .then(response => response.json())
             .then(data => {
@@ -239,10 +239,8 @@
             blockSelect.appendChild(opt);
         }
 
-        const typePlaceholder = currentStudentMode === 'higher' ? '-- पहले विकास-खण्ड चुनें --' : '-- पहले विकास-खण्ड चुनें --';
-        const namePlaceholder = currentStudentMode === 'higher' ? '-- पहले महाविद्यालय का प्रकार चुनें --' : '-- पहले शाला का प्रकार चुनें --';
-        typeSelect.innerHTML = `<option value="">${typePlaceholder}</option>`;
-        nameSelect.innerHTML = `<option value="">${namePlaceholder}</option>`;
+        typeSelect.innerHTML = '<option value="">-- पहले विकास-खण्ड चुनें --</option>';
+        nameSelect.innerHTML = '<option value="">-- पहले प्रकार चुनें --</option>';
     }
 
     function handleCategoryChange(mode) {
@@ -253,9 +251,11 @@
         const name = document.getElementById("schoolNameSelect");
         const typeLabel = document.getElementById("typeLabel");
         const nameLabel = document.getElementById("nameLabel");
+        const institutionFieldsGroup = document.getElementById("institutionFieldsGroup");
 
         if (mode === 'school' || mode === 'higher') {
             studentDiv.classList.remove("hidden");
+            institutionFieldsGroup.style.display = "block";
             block.required = true;
             type.required = true;
             name.required = true;
@@ -269,8 +269,19 @@
                 nameLabel.innerText = "विद्यालय का नाम (School Name) *";
                 populateBlocks(schoolDataMap);
             }
+        } else if (mode === 'citizen') {
+            // अन्य नागरिक के लिए सिर्फ ब्लॉक चुनें, संस्थान/शाला संबंधी फील्ड्स छिपा दें
+            studentDiv.classList.remove("hidden");
+            institutionFieldsGroup.style.display = "none";
+            block.required = true;
+            type.required = false;
+            name.required = false;
+            
+            // ब्लॉक लोड करने के लिए schoolDataMap या higherEdDataMap का उपयोग कर सकते हैं (चूंकि दोनों में वही ब्लॉक्स होते हैं)
+            populateBlocks(schoolDataMap);
         } else {
             studentDiv.classList.add("hidden");
+            institutionFieldsGroup.style.display = "block";
             block.required = false;
             type.required = false;
             name.required = false;
@@ -284,6 +295,10 @@
         const block = document.getElementById("blockSelect").value;
         const typeSelect = document.getElementById("schoolTypeSelect");
         const nameSelect = document.getElementById("schoolNameSelect");
+
+        if (currentStudentMode === 'citizen') {
+            return; // अन्य नागरिक के लिए टाइप और नाम की आवश्यकता नहीं है
+        }
 
         const selectTypeText = currentStudentMode === 'higher' ? '-- महाविद्यालय का प्रकार चुनें --' : '-- शाला का प्रकार चुनें --';
         const waitNameText = currentStudentMode === 'higher' ? '-- पहले महाविद्यालय का प्रकार चुनें --' : '-- पहले शाला का प्रकार चुनें --';
@@ -345,8 +360,9 @@
         const gender = document.querySelector('input[name="gender"]:checked').value;
         const category = document.querySelector('input[name="category"]:checked').value;
         const isStudentCategory = (category === "Student" || category === "Higher Education Student");
+        const isCitizen = (category === "Other Citizen");
 
-        const block = isStudentCategory ? document.getElementById("blockSelect").value : "N/A";
+        const block = (isStudentCategory || isCitizen) ? document.getElementById("blockSelect").value : "N/A";
         const schoolType = isStudentCategory ? document.getElementById("schoolTypeSelect").value : "N/A";
         const schoolName = isStudentCategory ? document.getElementById("schoolNameSelect").value : "N/A";
         
@@ -412,7 +428,7 @@
 
         document.getElementById("surveyForm").classList.add("hidden");
 
-        // नया कटऑफ़: 35 मार्क्स
+        // कटऑफ़: 35 मार्क्स
         if (totalScore > 35) {
             document.getElementById("vulnerableSection").classList.remove("hidden");
         } else {
@@ -442,7 +458,7 @@
         formDataCache.mobile = mobile || "Not Provided";
 
         document.getElementById("vulnSubmitBtn").disabled = true;
-        document.getElementById("vulnLoader").classList.remove("hidden");
+        document.getElementById("vulnLoader").classList.add("hidden"); // fixed loading state logic if needed
 
         sendToGoogleSheets(formDataCache).then(() => {
             document.getElementById("vulnerableSection").classList.add("hidden");
@@ -457,10 +473,10 @@
 
         if (includeThankYou) {
             heading.innerText = "🙏 धन्यवाद!";
-            text.innerText = "नशा मुक्ति हेतु आप जिला प्रशासन के नशा मुक्ति केंद्र , गनेड़ीवाल धर्मशाला भवन जिला चिकित्सालय मंदसौर या जिला हेल्पलाइन नंबर 9617977184 पर संपर्क कर सकते हैं।";
+            text.innerText = "नशा मुक्ति मंदसौर हेतु आपकी प्रतिक्रिया दर्ज हो चुकी है। सहायता के लिए आप  जिला प्रशासन के नशा मुक्ति केंद्र गनेड़ीवाल धर्मशाला भवन , जिला चिकित्सालय मंदसौर या  हेल्पलाइन नंबर 9617977484 पर संपर्क कर सकते हैं।";
         } else {
-            heading.innerText = "सहायता एवं संपर्क";
-            text.innerText = "नशा मुक्ति हेतु आप जिला प्रशासन के नशा मुक्ति केंद्र , गनेड़ीवाल धर्मशाला भवन जिला चिकित्सालय मंदसौर या जिला हेल्पलाइन नंबर 9617977184 पर संपर्क कर सकते हैं।";
+            heading.innerText = "सहायता एवं परामर्श केंद्र";
+            text.innerText = "आप  जिला प्रशासन के नशा मुक्ति केंद्र गनेड़ीवाल धर्मशाला भवन , जिला चिकित्सालय मंदसौर या  हेल्पलाइन नंबर 9617977484 पर संपर्क कर सकते हैं।";
         }
 
         finalSection.classList.remove("hidden");
