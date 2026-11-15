@@ -156,7 +156,7 @@
             <input type="text" id="userName" class="input-field" placeholder="अपना नाम लिखें">
 
             <label class="q-label">मोबाइल नंबर (Optional):</label>
-            <input type="tel" id="userMobile" class="input-field" placeholder="मोबाइल नंबर लिखें">
+            <input type="tel" id="userMobile" class="input-field" placeholder="10 अंकों का मोबाइल नंबर लिखें" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
 
             <button onclick="submitFinalVulnerable()" class="btn btn-danger" id="vulnSubmitBtn">सबमिट करें</button>
             <div id="vulnLoader" class="loader hidden">डेटा सेव हो रहा है...</div>
@@ -271,14 +271,12 @@
                 populateBlocks(schoolDataMap);
             }
         } else if (mode === 'citizen') {
-            // अन्य नागरिक के लिए सिर्फ ब्लॉक चुनें, संस्थान/शाला संबंधी फील्ड्स छिपा दें
             studentDiv.classList.remove("hidden");
             institutionFieldsGroup.style.display = "none";
             block.required = true;
             type.required = false;
             name.required = false;
             
-            // ब्लॉक लोड करने के लिए schoolDataMap या higherEdDataMap का उपयोग कर सकते हैं (चूंकि दोनों में वही ब्लॉक्स होते हैं)
             populateBlocks(schoolDataMap);
         } else {
             studentDiv.classList.add("hidden");
@@ -298,7 +296,7 @@
         const nameSelect = document.getElementById("schoolNameSelect");
 
         if (currentStudentMode === 'citizen') {
-            return; // अन्य नागरिक के लिए टाइप और नाम की आवश्यकता नहीं है
+            return;
         }
 
         const selectTypeText = currentStudentMode === 'higher' ? '-- महाविद्यालय का प्रकार चुनें --' : '-- शाला का प्रकार चुनें --';
@@ -356,7 +354,6 @@
     }
 
 
-    // ब्लॉक नाम को Master List के अनुसार standardise करें
     function normalizeBlockName(rawBlock) {
         if (!rawBlock) return "";
 
@@ -377,7 +374,6 @@
 
         const input = clean(rawBlock);
 
-        // पहले exact/known spelling variants का मिलान
         for (const block of masterBlocks) {
             const candidates = [block.name, ...block.aliases];
             if (candidates.some(alias => clean(alias) === input)) {
@@ -385,7 +381,6 @@
             }
         }
 
-        // बहुत छोटी टाइपिंग/Unicode spelling variation के लिए fuzzy match
         function editDistance(a, b) {
             const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
             for (let i = 1; i <= a.length; i++) {
@@ -410,7 +405,6 @@
             for (const alias of candidates) {
                 const candidate = clean(alias);
                 const distance = editDistance(Array.from(input), Array.from(candidate));
-                // अधिकतम 1 अक्षर का अंतर स्वीकार करें
                 if (distance < bestDistance) {
                     bestDistance = distance;
                     bestMatch = block.name;
@@ -434,7 +428,6 @@
             : "N/A";
         const block = selectedBlock === "N/A" ? "N/A" : normalizeBlockName(selectedBlock);
 
-        // यदि ब्लॉक नाम Master List से match नहीं होता, तो गलत नाम सेव न करें
         if (selectedBlock !== "N/A" && !block) {
             alert("चयनित विकास-खण्ड का नाम मानक सूची से मेल नहीं खाता। कृपया सही ब्लॉक चुनें।");
             return;
@@ -505,7 +498,6 @@
 
         document.getElementById("surveyForm").classList.add("hidden");
 
-        // कटऑफ़: 35 मार्क्स
         if (totalScore > 35) {
             document.getElementById("vulnerableSection").classList.remove("hidden");
         } else {
@@ -531,11 +523,17 @@
         const name = document.getElementById("userName").value.trim();
         const mobile = document.getElementById("userMobile").value.trim();
 
+        // यदि यूजर ने मोबाइल नंबर भरा है, तो सुनिश्चित करें कि वह पूरे 10 अंकों का हो
+        if (mobile !== "" && mobile.length !== 10) {
+            alert("कृपया ठीक 10 अंकों का वैध मोबाइल नंबर दर्ज करें।");
+            return;
+        }
+
         formDataCache.name = name || "Not Provided";
         formDataCache.mobile = mobile || "Not Provided";
 
         document.getElementById("vulnSubmitBtn").disabled = true;
-        document.getElementById("vulnLoader").classList.add("hidden"); // fixed loading state logic if needed
+        document.getElementById("vulnLoader").classList.add("hidden");
 
         sendToGoogleSheets(formDataCache).then(() => {
             document.getElementById("vulnerableSection").classList.add("hidden");
